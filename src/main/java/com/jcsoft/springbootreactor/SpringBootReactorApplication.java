@@ -62,39 +62,39 @@ public class SpringBootReactorApplication
 
     private void ejemploIterable()
     {
-        List<String> usuariosLst = new ArrayList<>();
-        usuariosLst.add("Jorge Cueva");
-        usuariosLst.add("Lucia Castilla");
-        usuariosLst.add("Jose Díaz");
-        usuariosLst.add("Juan Salazar");
-        usuariosLst.add("Daniel Meneses");
-        usuariosLst.add("Bruce Lee");
-        usuariosLst.add("Bruce Willis");
-        // nombres es un observable
-        Flux<String> nombres = Flux.fromIterable(usuariosLst);
+        List<String> userLst = new ArrayList<>();
+        userLst.add("Jorge Cueva");
+        userLst.add("Lucia Castilla");
+        userLst.add("Jose Díaz");
+        userLst.add("Juan Salazar");
+        userLst.add("Daniel Meneses");
+        userLst.add("Bruce Lee");
+        userLst.add("Bruce Willis");
+        // names es un observable
+        Flux<String> names = Flux.fromIterable(userLst);
         //Flux.just("Jorge Cueva", "Lucia Castilla", "Jose Díaz", "Juan Salazar", "Daniel Meneses", "Bruce Lee", "Bruce Willis");
 
-        // aqui al aplicar todos los operadores a nombres no modifica el flujo principal, sino que se crea uno nuevo (usuarios)
-        Flux<Usuario> usuarios = nombres.map(nombre -> new Usuario(nombre.split(" ")[0],
-                                                                   nombre.split(" ")[1]))
-                                        .filter(usuario -> !usuario.getNombre().equalsIgnoreCase("bruce"))
-                                        .doOnNext(usuario -> {
-                                            if (usuario == null || usuario.getNombre().isEmpty()) {
-                                                throw new RuntimeException("Nombres no pueden ser vacios");
-                                            }
-                                            System.out.println(usuario.getNombre());
-                                        })
-                                        //.map(String::toUpperCase)
-                                        .map(usuario -> { // esto se reflejara en el subscribe, en el doOnNext de arriba no
-                                            usuario.setNombre(usuario.getNombre().toLowerCase());
-                                            return usuario;
-                                        });
+        // aqui al aplicar todos los operadores a names no modifica el flujo principal, sino que se crea uno nuevo (users)
+        Flux<Usuario> users = names.map(name -> new Usuario(name.split(" ")[0],
+                                                            name.split(" ")[1]))
+                                   .filter(user -> !user.getNombre().equalsIgnoreCase("bruce"))
+                                   .doOnNext(user -> {
+                                       if (user == null || user.getNombre().isEmpty()) {
+                                           throw new RuntimeException("Nombres no pueden ser vacios");
+                                       }
+                                       System.out.println(user.getNombre());
+                                   })
+                                   //.map(String::toUpperCase)
+                                   .map(user -> { // esto se reflejara en el subscribe, en el doOnNext de arriba no
+                                       user.setNombre(user.getNombre().toLowerCase());
+                                       return user;
+                                   });
         // aqui generamos un observador que va a consumir lo producido
         // ambos se ejecutan en el onNext
-        usuarios.subscribe(usuario -> LOG.info(usuario.toString()),
-                           error -> LOG.error(error.getMessage()),
-                           () -> LOG.info(
-                                   "Ha finalizado la ejecucion del flujo")); //Runnable es una functional interface
+        users.subscribe(user -> LOG.info(user.toString()),
+                        error -> LOG.error(error.getMessage()),
+                        () -> LOG.info(
+                                "Ha finalizado la ejecucion del flujo")); //Runnable es una functional interface
     }
 
     private void ejemploFlatMap()
